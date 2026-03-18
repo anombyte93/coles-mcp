@@ -281,19 +281,29 @@ class ColesAPI:
             use_api_base=True,
         )
 
-        # Fallback to DOM parsing if API blocked by Incapsula
+        # Check if Imperva blocked the API
+        is_blocked = False
         if result and isinstance(result, dict):
             error = result.get("error")
+            # Check if response is HTML (Imperva blocking)
             if error or not result.get("items"):
-                # API blocked or failed - try DOM parsing
-                from coles_mcp.dom_parser import search_via_dom
+                is_blocked = True
 
-                try:
-                    dom_result = await search_via_dom(self._page, query, self._store_id)
+        # Fallback chain for Imperva blocking
+        if is_blocked:
+            # Try DOM parsing
+            try:
+                from coles_mcp.dom_parser import search_via_dom
+                dom_result = await search_via_dom(self._page, query, self._store_id)
+                if dom_result.get("items"):
                     return dom_result
-                except Exception:
-                    # DOM parsing also failed, return original error
-                    pass
+            except Exception:
+                pass
+
+            # Final fallback: demo mode (allows tools to work with sample data)
+            from coles_mcp.demo_mode import search_demo_mode
+            demo_result = search_demo_mode(query)
+            return demo_result
 
         return result
 

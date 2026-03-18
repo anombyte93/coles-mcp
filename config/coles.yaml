@@ -9,7 +9,7 @@ store:
 
 api:
   base_url: "https://www.coles.com.au"
-  api_base: "https://api.coles.com.au"
+  api_base: "https://www.coles.com.au"  # API calls go through www.coles.com.au/api/...
   subscription_key: ""  # Leave empty to auto-discover from Coles frontend JS. Auto-refreshes on 401/403. Set manually to skip discovery.
 
 rate_limit:

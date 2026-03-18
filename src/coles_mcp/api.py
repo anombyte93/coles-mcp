@@ -17,11 +17,20 @@ from playwright.async_api import Page
 
 
 class ColesAPI:
-    """Calls Coles internal REST APIs from inside the browser context."""
+    """Calls Coles internal REST APIs from inside the browser context.
+
+    NOTE: Coles has no official public API (2026). All endpoints are reverse-engineered.
+    The subscription key pattern below is from community research and may rotate.
+    """
 
     BASE = "https://www.coles.com.au"
-    API_BASE = "https://api.coles.com.au"
+    # API calls go through www.coles.com.au/api/... (api.coles.com.au doesn't exist)
+    API_BASE = "https://www.coles.com.au"
     MAX_FETCH_RETRIES = 3
+
+    # Fallback subscription key from community reverse-engineering (may rotate)
+    # Source: Plan document and community research
+    FALLBACK_SUBSCRIPTION_KEY = "eae83861d1cd4de6bb9cd8a2cd6f041e"
     # 429 (rate limit) and 502/503 (infra) are retryable.
     # 401/403 (auth/subscription key) trigger key rediscovery.
     RETRYABLE_CODES = {429, 502, 503}
@@ -109,13 +118,18 @@ class ColesAPI:
     async def _get_subscription_key(self, force_refresh: bool = False) -> str:
         """Get subscription key, discovering if needed.
 
-        If force_refresh is True or key is empty, re-disccover from homepage.
+        If force_refresh is True or key is empty, re-discover from homepage.
+        Falls back to hardcoded key if discovery fails (Coles has no official API).
         """
         if force_refresh or not self._subscription_key:
             discovered = await self._discover_subscription_key()
             if discovered:
                 self._subscription_key = discovered
-        return self._subscription_key or ""
+            else:
+                # Discovery failed - use fallback key from community research
+                # (Coles has no official API, this is reverse-engineered)
+                self._subscription_key = self.FALLBACK_SUBSCRIPTION_KEY
+        return self._subscription_key or self.FALLBACK_SUBSCRIPTION_KEY
 
     async def check_auth(self) -> dict:
         """Check auth state via Coles API.

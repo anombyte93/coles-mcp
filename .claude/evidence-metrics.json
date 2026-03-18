@@ -1,9 +1,0 @@
-{
-  "session": "2026-03-18",
-  "total_tool_calls": 31,
-  "tiers": {
-    "execution": 30,
-    "observation": 1
-  },
-  "last_updated": 1773840202.958116
-}

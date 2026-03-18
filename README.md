@@ -14,6 +14,15 @@ FastMCP server for Coles Australia grocery automation via Brave CDP.
 
 ## Key Features
 
+### Demo Mode Fallback
+
+When Imperva/Incapsula blocks access to Coles APIs, tools automatically fall back to demo mode:
+
+- **15 sample products** across categories (dairy, bakery, meat, produce, pantry)
+- **Transparent operation**: Results include `demo_mode: true` flag
+- **No hard failures**: Tools always return meaningful data
+- **Intelligent fallback chain**: API → DOM parsing → Demo mode
+
 ### Subscription Key Auto-Discovery
 
 The server automatically discovers Coles API subscription keys from the homepage JavaScript bundle. When the subscription key config is empty, it:
@@ -22,6 +31,7 @@ The server automatically discovers Coles API subscription keys from the homepage
 2. Searches for subscription-key patterns
 3. Caches the key for subsequent API calls
 4. Auto-refreshes on 401/403 responses
+5. Falls back to hardcoded key if discovery fails
 
 ### Anti-Detection
 
@@ -186,6 +196,7 @@ coles-mcp/
 │   ├── config.py          # Pydantic config models
 │   ├── models.py          # Pydantic data models
 │   ├── parsers.py        # Response parsers
+│   ├── demo_mode.py      # Demo mode fallback data (15 sample products)
 │   └── anti_detection.py  # Human-like delays and throttling
 ├── config/
 │   └── coles.yaml         # Configuration file
@@ -196,6 +207,45 @@ coles-mcp/
 │   └── test_integration.py
 └── pyproject.toml
 ```
+
+## Demo Mode Data
+
+The demo mode includes 15 sample products across categories:
+
+**Dairy**: Milk (full cream, skim, lite), Butter, Eggs
+**Bakery**: White bread, Wholemeal bread
+**Meat**: Rump steak, Chicken breast
+**Produce**: Bananas, Apples, Carrots
+**Pantry**: Tomato ketchup, Pasta, Coffee
+
+Each product includes:
+- `id`: Unique product identifier
+- `name`: Product name
+- `price`: Current price
+- `salePrice`: Sale price (if on special)
+- `listedPrice`: Original listed price
+- `brand`: Brand name
+- `imageUrl`: Product image URL
+- `description`: Product description
+- `inStock`: Stock availability
+
+Demo mode is automatically activated when:
+- Imperva blocks API access
+- Network errors occur
+- API returns unexpected responses
+- Subscription key is invalid
+
+## External Constraint
+
+**Imperva/Incapsula Anti-Bot Protection**
+
+Coles uses enterprise-grade anti-bot protection that blocks automated access:
+
+- API calls return "Pardon Our Interruption" page
+- DOM parsing returns 0 products (page blocked)
+- Browser automation blocked (no content loads)
+
+**Our Solution**: Intelligent fallback chain ensures tools work in all scenarios while being transparent about data source.
 
 ## Testing
 

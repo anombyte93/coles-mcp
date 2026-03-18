@@ -106,3 +106,18 @@
 {"ts":"2026-03-18T13:40:27Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && python scripts/test_bff.py\n"}
 {"ts":"2026-03-18T13:40:33Z","tool":"Bash","tier":"execution","detail":"grep -n \"async def search\" /home/anombyte/Hermes/current-projects/coles-mcp/src/coles_mcp/api.py\n"}
 {"ts":"2026-03-18T13:41:23Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && python scripts/test_bff_search.py\n"}
+{"ts":"2026-03-18T13:41:31Z","tool":"Bash","tier":"execution","detail":"git add -A && git commit -m \"$(cat <<'EOF'\nAdd fallback subscription key and research findings\n\nResearch revealed:\n- Coles has NO official public API (2026)\n- All endpoints are reverse-engineered\n- ap\n"}
+{"ts":"2026-03-18T13:43:03Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && python scripts/monitor_network.py\n"}
+{"ts":"2026-03-18T13:43:56Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && python scripts/test_captured_endpoint.py\n"}
+{"ts":"2026-03-18T13:44:07Z","tool":"Bash","tier":"execution","detail":"grep -n \"set_store_context\\|_store_id\" /home/anombyte/Hermes/current-projects/coles-mcp/src/coles_mcp/api.py | head -10\n"}
+{"ts":"2026-03-18T13:45:41Z","tool":"Bash","tier":"execution","detail":"launch-brave-cdp 5\n"}
+{"ts":"2026-03-18T13:45:59Z","tool":"Bash","tier":"execution","detail":"python scripts/test_cdp_session.py\n"}
+{"ts":"2026-03-18T13:46:45Z","tool":"Bash","tier":"execution","detail":"python scripts/inspect_request.py\n"}
+{"ts":"2026-03-18T13:46:52Z","tool":"Bash","tier":"execution","detail":"cat /tmp/coles_captured_endpoint.txt 2>/dev/null || echo \"No saved endpoint found\"\n"}
+{"ts":"2026-03-18T13:47:30Z","tool":"Bash","tier":"execution","detail":"python scripts/test_filter_formats.py\n"}
+{"ts":"2026-03-18T13:48:11Z","tool":"Bash","tier":"execution","detail":"python scripts/test_with_navigation.py\n"}
+{"ts":"2026-03-18T13:49:27Z","tool":"Bash","tier":"execution","detail":"python scripts/discover_and_test.py\n"}
+{"ts":"2026-03-18T13:51:23Z","tool":"Bash","tier":"execution","detail":"python scripts/systematic_test.py\n"}
+{"ts":"2026-03-18T13:52:28Z","tool":"Bash","tier":"execution","detail":"python scripts/test_dom_parsing.py\n"}
+{"ts":"2026-03-18T13:53:16Z","tool":"Bash","tier":"execution","detail":"python scripts/inspect_dom.py\n"}
+{"ts":"2026-03-18T13:53:21Z","tool":"Bash","tier":"execution","detail":"head -50 /tmp/coles_search_page.html\n"}

@@ -268,12 +268,34 @@ class ColesAPI:
 
     async def search(self, query: str, page_num: int = 1, page_size: int = 24) -> dict:
         """Search products. Returns {items, total}."""
-        # Coles search API
-        return await self._fetch_json(
-            f"/api/customer/v1/coles/products/search/?term={query}&pageNumber={page_num}&pageSize={page_size}",
+        # Coles BFF API endpoint (discovered via network monitoring)
+        # Format: /api/bff/products/search?storeId=XXX&start=N&filters=...&term=XXX
+        # Note: Coles has no official API - this is reverse-engineered
+        start = (page_num - 1) * page_size
+        filters = "%5B%7D"  # Empty filters array
+
+        # Try API first
+        result = await self._fetch_json(
+            f"/api/bff/products/search?storeId={self._store_id}&start={start}&sortBy=salesDescending&filters={filters}&excludeAds=true&authenticated=false&term={query}",
             "GET",
             use_api_base=True,
         )
+
+        # Fallback to DOM parsing if API blocked by Incapsula
+        if result and isinstance(result, dict):
+            error = result.get("error")
+            if error or not result.get("items"):
+                # API blocked or failed - try DOM parsing
+                from coles_mcp.dom_parser import search_via_dom
+
+                try:
+                    dom_result = await search_via_dom(self._page, query, self._store_id)
+                    return dom_result
+                except Exception:
+                    # DOM parsing also failed, return original error
+                    pass
+
+        return result
 
     async def product_detail(self, product_id: str) -> dict:
         """Get full product detail. Returns product data."""

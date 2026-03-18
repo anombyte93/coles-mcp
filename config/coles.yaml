@@ -1,0 +1,17 @@
+browser:
+  cdp_port: 61005  # Slot 5 for Coles (avoid Woolies on slot 4)
+  timeout: 30000
+  headless: false
+
+store:
+  store_id: "0357"  # Default Perth store - user should override
+  shopping_method: "delivery"
+
+api:
+  base_url: "https://www.coles.com.au"
+  api_base: "https://api.coles.com.au"
+  subscription_key: ""  # Leave empty to auto-discover from Coles frontend JS. Auto-refreshes on 401/403. Set manually to skip discovery.
+
+rate_limit:
+  requests_per_minute: 30
+  delay_between_requests: 2.0

@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coles-mcp"
+version = "0.1.0"
+description = "FastMCP server for Coles grocery automation via Brave CDP"
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=2.0",
+    "playwright>=1.40",
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-timeout>=2.2",
+    "pytest-cov>=4.0",
+    "ruff>=0.1",
+]
+
+[project.scripts]
+coles-mcp = "coles_mcp.server:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+timeout = 30
+testpaths = ["tests"]
+markers = [
+    "integration: marks tests requiring live Brave CDP (deselect with '-m \"not integration\"')",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

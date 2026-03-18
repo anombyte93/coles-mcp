@@ -1,0 +1,1 @@
+"""Coles Australia MCP server."""

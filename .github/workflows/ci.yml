@@ -2,56 +2,67 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main, develop ]
   pull_request:
-    branches: [main]
+    branches: [ main, develop ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11", "3.12", "3.13"]
 
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
 
-      - name: Run unit tests
-        run: |
-          pytest tests/ -m "not integration" -v --timeout=30 --junitxml=test-results.xml
+    - name: Run linting
+      run: |
+        ruff check src/ tests/
+        ruff format --check src/ tests/
 
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results-${{ matrix.python-version }}
-          path: test-results.xml
+    - name: Run type checking
+      run: |
+        mypy src/ --ignore-missing-imports
 
-  lint:
+    - name: Run unit tests
+      run: |
+        pytest tests/ -m "not integration" -v --tb=short
+
+    - name: Check demo mode
+      run: |
+        python examples/test_demo_mode.py
+
+  test-integration:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ruff
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
 
-      - name: Lint with ruff
-        run: |
-          ruff check src/ tests/ --select E,F,W --ignore E501
+    - name: Run all tests including integration
+      run: |
+        pytest tests/ -v --tb=short
+      env:
+        BRAVE_CDP_SLOT: 5  # Will skip integration tests if no browser

@@ -160,3 +160,15 @@
 {"ts":"2026-03-18T14:32:53Z","tool":"Bash","tier":"execution","detail":"wc -l /home/anombyte/Hermes/current-projects/woolies-mcp/src/woolies_mcp/server.py\n"}
 {"ts":"2026-03-18T14:33:00Z","tool":"Bash","tier":"execution","detail":"cat > /tmp/verification.md << 'EOF'\n# Woolies MCP vs Coles MCP - Tool Comparison\n\n## Woolies MCP Tools (11 total)\n1. woolies_health_check\n2. woolies_login\n3. woolies_login_with_credentials\n4. woolies_\n"}
 {"ts":"2026-03-18T14:34:20Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && pytest tests/ -q 2>&1 | tail -3\n"}
+{"ts":"2026-03-18T14:34:28Z","tool":"Bash","tier":"execution","detail":"git add -A && git commit -m \"Enhance demo mode with comprehensive sample data\n\nDemo Mode Improvements:\n- Expanded from 3 to 15 sample products across categories\n- Added dairy, bakery, meat, produce, a\n"}
+{"ts":"2026-03-18T14:34:34Z","tool":"Bash","tier":"execution","detail":"git push origin main\n"}
+{"ts":"2026-03-18T14:34:48Z","tool":"Bash","tier":"execution","detail":"ls -la /home/anombyte/Hermes/current-projects/coles-mcp/README.md\n"}
+{"ts":"2026-03-18T14:35:09Z","tool":"Bash","tier":"execution","detail":"git add README.md && git commit -m \"Update README with demo mode documentation\n\n- Document demo mode fallback feature\n- Add external constraint explanation (Imperva blocking)\n- List 15 sample products\n"}
+{"ts":"2026-03-18T14:35:22Z","tool":"Bash","tier":"execution","detail":"git push origin main\n"}
+{"ts":"2026-03-18T14:35:43Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && python examples/test_demo_mode.py\n"}
+{"ts":"2026-03-18T14:35:58Z","tool":"Bash","tier":"execution","detail":"git add examples/ && git commit -m \"Add example scripts for Coles MCP usage\n\nCreated two example scripts:\n\n1. examples/basic_usage.py\n   - Demonstrates how to use Coles MCP tools via MCP client\n   - S\n"}
+{"ts":"2026-03-18T14:36:05Z","tool":"Bash","tier":"execution","detail":"git push origin main\n"}
+{"ts":"2026-03-18T14:37:16Z","tool":"Bash","tier":"execution","detail":"mkdir -p .github/workflows\n"}
+{"ts":"2026-03-18T14:37:23Z","tool":"Bash","tier":"execution","detail":"cat > .github/workflows/ci.yml << 'EOF'\nname: CI\n\non:\n  push:\n    branches: [ main, develop ]\n  pull_request:\n    branches: [ main, develop ]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n\n    steps:\n    \n"}
+{"ts":"2026-03-18T14:37:52Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && pytest tests/test_edge_cases.py -v\n"}
+{"ts":"2026-03-18T14:38:26Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && pytest tests/ -v --tb=short 2>&1 | tail -5\n"}

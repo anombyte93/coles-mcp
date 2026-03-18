@@ -13,3 +13,9 @@
 {"ts":"2026-03-18T13:15:59Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && ruff check src/ tests/ --select E,F,W --ignore E501 2>&1\n"}
 {"ts":"2026-03-18T13:16:02Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && pytest tests/test_models.py -v 2>&1\n"}
 {"ts":"2026-03-18T13:16:03Z","tool":"Bash","tier":"execution","detail":"git init 2>&1\n"}
+{"ts":"2026-03-18T13:16:09Z","tool":"Bash","tier":"execution","detail":"git add . 2>&1 && git status 2>&1\n"}
+{"ts":"2026-03-18T13:16:17Z","tool":"Bash","tier":"execution","detail":"git commit -m \"$(cat <<'EOF'\nPhase 1: Coles MCP server skeleton with all 11 tools\n\nImplement FastMCP server for Coles Australia grocery automation.\n\nCore files:\n- server.py: FastMCP server with 11 too\n"}
+{"ts":"2026-03-18T13:18:45Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && pytest tests/ -m \"not integration\" -v 2>&1\n"}
+{"ts":"2026-03-18T13:19:04Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && ruff check src/ tests/ --select E,F,W --ignore E501 2>&1\n"}
+{"ts":"2026-03-18T13:19:27Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && pytest tests/ -m \"not integration\" -v 2>&1\n"}
+{"ts":"2026-03-18T13:20:00Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && pytest tests/ -m \"not integration\" -v 2>&1\n"}

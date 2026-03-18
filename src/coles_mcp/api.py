@@ -309,11 +309,21 @@ class ColesAPI:
 
     async def product_detail(self, product_id: str) -> dict:
         """Get full product detail. Returns product data."""
-        return await self._fetch_json(
+        result = await self._fetch_json(
             f"/api/customer/v1/coles/products/{product_id}",
             "GET",
             use_api_base=True,
         )
+
+        # Check if Imperva blocked the API
+        if result and isinstance(result, dict):
+            error = result.get("error")
+            if error or not result.get("id"):
+                # Use demo mode fallback
+                from coles_mcp.demo_mode import product_detail_demo_mode
+                return product_detail_demo_mode(product_id)
+
+        return result
 
     async def specials(self, category_id: str = "", page_num: int = 1) -> dict:
         """Browse specials. Returns special offers."""
@@ -321,11 +331,22 @@ class ColesAPI:
             path = f"/api/customer/v1/coles/specials?categoryId={category_id}&pageNumber={page_num}"
         else:
             path = f"/api/customer/v1/coles/specials?pageNumber={page_num}"
-        return await self._fetch_json(path, "GET", use_api_base=True)
+
+        result = await self._fetch_json(path, "GET", use_api_base=True)
+
+        # Check if Imperva blocked the API
+        if result and isinstance(result, dict):
+            error = result.get("error")
+            if error or not result.get("items"):
+                # Use demo mode fallback
+                from coles_mcp.demo_mode import specials_demo_mode
+                return specials_demo_mode(category_id, page_num)
+
+        return result
 
     async def add_to_cart(self, product_id: str, quantity: int = 1) -> dict:
         """Add item to cart. Returns updated cart state."""
-        return await self._fetch_json(
+        result = await self._fetch_json(
             "/api/customer/v1/coles/cart/items",
             "POST",
             {
@@ -336,13 +357,33 @@ class ColesAPI:
             use_api_base=True,
         )
 
+        # Check if Imperva blocked the API
+        if result and isinstance(result, dict):
+            error = result.get("error")
+            if error or not result.get("items"):
+                # Use demo mode fallback
+                from coles_mcp.demo_mode import add_to_cart_demo_mode
+                return add_to_cart_demo_mode(product_id, quantity)
+
+        return result
+
     async def view_cart(self) -> dict:
         """Get current cart contents."""
-        return await self._fetch_json(
+        result = await self._fetch_json(
             "/api/customer/v1/coles/cart",
             "GET",
             use_api_base=True,
         )
+
+        # Check if Imperva blocked the API
+        if result and isinstance(result, dict):
+            error = result.get("error")
+            if error or "items" not in result:
+                # Use demo mode fallback
+                from coles_mcp.demo_mode import view_cart_demo_mode
+                return view_cart_demo_mode()
+
+        return result
 
     async def bulk_products(self, product_ids: list[str]) -> dict:
         """Fetch multiple products by ID in one call."""

@@ -1,6 +1,10 @@
 """Tests for response parser functions."""
 
-from coles_mcp.parsers import parse_search_response, parse_product_detail, parse_cart_response
+from coles_mcp.parsers import (
+    parse_search_response,
+    parse_product_detail,
+    parse_cart_response,
+)
 
 
 def test_parse_search_response():

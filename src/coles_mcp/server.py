@@ -141,7 +141,9 @@ async def coles_login_with_credentials(email: str, password: str) -> dict:
         page = await _browser.get_page()
 
         # Navigate to login page
-        await page.goto(f"{BASE_URL}/account/login", wait_until="domcontentloaded", timeout=30000)
+        await page.goto(
+            f"{BASE_URL}/account/login", wait_until="domcontentloaded", timeout=30000
+        )
         await _anti.wait()
 
         # Check if already logged in
@@ -150,15 +152,21 @@ async def coles_login_with_credentials(email: str, password: str) -> dict:
 
         # Fill email
         try:
-            await page.wait_for_selector('input[type="email"], input[name="email"]', timeout=10000)
-            await _anti.type_like_human(page, 'input[type="email"], input[name="email"]', email)
+            await page.wait_for_selector(
+                'input[type="email"], input[name="email"]', timeout=10000
+            )
+            await _anti.type_like_human(
+                page, 'input[type="email"], input[name="email"]', email
+            )
             await _anti.wait()
         except Exception:
             return {"success": False, "message": "Email input not found"}
 
         # Fill password
         try:
-            await _anti.type_like_human(page, 'input[type="password"], input[name="password"]', password)
+            await _anti.type_like_human(
+                page, 'input[type="password"], input[name="password"]', password
+            )
             await _anti.wait()
         except Exception:
             return {"success": False, "message": "Password input not found"}
@@ -180,8 +188,16 @@ async def coles_login_with_credentials(email: str, password: str) -> dict:
             pass
 
         # Check for MFA
-        if "mfa" in page.url.lower() or "verification" in page.url.lower() or "code" in page.url.lower():
-            return {"success": False, "requires_mfa": True, "message": "MFA required — solve manually in Brave"}
+        if (
+            "mfa" in page.url.lower()
+            or "verification" in page.url.lower()
+            or "code" in page.url.lower()
+        ):
+            return {
+                "success": False,
+                "requires_mfa": True,
+                "message": "MFA required — solve manually in Brave",
+            }
 
         # Export cookies
         try:
@@ -340,14 +356,16 @@ async def coles_view_cart() -> dict:
             quantity = item.get("quantity", 0)
             subtotal = price * quantity if price else item.get("totalPrice", 0)
 
-            items.append(CartItem(
-                name=item.get("name", ""),
-                quantity=quantity,
-                price=price,
-                subtotal=subtotal,
-                product_id=str(item.get("id", "")),
-                image_url=item.get("imageUrl"),
-            ).model_dump())
+            items.append(
+                CartItem(
+                    name=item.get("name", ""),
+                    quantity=quantity,
+                    price=price,
+                    subtotal=subtotal,
+                    product_id=str(item.get("id", "")),
+                    image_url=item.get("imageUrl"),
+                ).model_dump()
+            )
 
         return Cart(
             items=items,
@@ -424,7 +442,9 @@ async def coles_select_time_slot(slot_text: str) -> dict:
 
         try:
             # Look for time slot selection button
-            time_btn = page.locator("button:has-text('Select a time'), button:has-text('Choose Time'), button:has-text('View available')").first
+            time_btn = page.locator(
+                "button:has-text('Select a time'), button:has-text('Choose Time'), button:has-text('View available')"
+            ).first
             await time_btn.click(timeout=5000)
             await _anti.wait()
         except Exception:
@@ -435,7 +455,9 @@ async def coles_select_time_slot(slot_text: str) -> dict:
             await slot_btn.click(timeout=5000)
             await _anti.wait()
 
-            confirm = page.locator("button:has-text('Reserve'), button:has-text('Done'), button:has-text('Confirm')").first
+            confirm = page.locator(
+                "button:has-text('Reserve'), button:has-text('Done'), button:has-text('Confirm')"
+            ).first
             try:
                 await confirm.click(timeout=3000)
             except Exception:
@@ -443,7 +465,10 @@ async def coles_select_time_slot(slot_text: str) -> dict:
 
             return {"success": True, "message": f"Selected: {slot_text}"}
         except Exception as e:
-            return {"success": False, "message": f"Could not find slot '{slot_text}': {e}"}
+            return {
+                "success": False,
+                "message": f"Could not find slot '{slot_text}': {e}",
+            }
 
 
 def main():

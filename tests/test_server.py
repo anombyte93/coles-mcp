@@ -90,23 +90,27 @@ async def test_api_class_structure():
     api = ColesAPI(mock_page, "")
 
     # Test methods exist
-    assert hasattr(api, 'check_auth')
-    assert hasattr(api, 'search')
-    assert hasattr(api, 'product_detail')
-    assert hasattr(api, 'specials')
-    assert hasattr(api, 'add_to_cart')
-    assert hasattr(api, 'view_cart')
-    assert hasattr(api, 'bulk_products')
-    assert hasattr(api, 'delivery_setup')
-    assert hasattr(api, 'health_check')
-    assert hasattr(api, '_discover_subscription_key')
-    assert hasattr(api, '_get_subscription_key')
+    assert hasattr(api, "check_auth")
+    assert hasattr(api, "search")
+    assert hasattr(api, "product_detail")
+    assert hasattr(api, "specials")
+    assert hasattr(api, "add_to_cart")
+    assert hasattr(api, "view_cart")
+    assert hasattr(api, "bulk_products")
+    assert hasattr(api, "delivery_setup")
+    assert hasattr(api, "health_check")
+    assert hasattr(api, "_discover_subscription_key")
+    assert hasattr(api, "_get_subscription_key")
 
 
 @pytest.mark.asyncio
 async def test_parser_functions():
     """Test parser functions exist and work."""
-    from coles_mcp.parsers import parse_search_response, parse_product_detail, parse_cart_response
+    from coles_mcp.parsers import (
+        parse_search_response,
+        parse_product_detail,
+        parse_cart_response,
+    )
 
     # Test parse_search_response
     search_data = {

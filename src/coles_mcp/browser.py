@@ -50,7 +50,8 @@ class BrowserManager:
         if slot is None:
             return False
         proc = await asyncio.create_subprocess_exec(
-            "launch-brave-cdp", str(slot),
+            "launch-brave-cdp",
+            str(slot),
             stdout=asyncio.subprocess.DEVNULL,
             stderr=asyncio.subprocess.DEVNULL,
         )
@@ -72,7 +73,9 @@ class BrowserManager:
                 try:
                     if not self._playwright:
                         self._playwright = await async_playwright().start()
-                    self._browser = await self._playwright.chromium.connect_over_cdp(self._cdp_url)
+                    self._browser = await self._playwright.chromium.connect_over_cdp(
+                        self._cdp_url
+                    )
                     if attempt > 0:
                         # Reconnected after relaunch — reset stale state
                         self._cookies_injected = False
@@ -117,7 +120,9 @@ class BrowserManager:
         This allows MFA bypass: saved cookies tell Coles this is a
         recognized device/session.
         """
-        cookie_file = Path(__file__).parent.parent.parent / "config" / "auth-cookies.json"
+        cookie_file = (
+            Path(__file__).parent.parent.parent / "config" / "auth-cookies.json"
+        )
         if not cookie_file.exists():
             return
         try:
@@ -131,14 +136,20 @@ class BrowserManager:
     async def export_auth_cookies(self) -> None:
         """Export current auth cookies to config/auth-cookies.json for persistence."""
         ctx = await self._get_context()
-        cookies = await ctx.cookies([
-            "https://www.coles.com.au",
-            "https://api.coles.com.au",
-        ])
+        cookies = await ctx.cookies(
+            [
+                "https://www.coles.com.au",
+                "https://api.coles.com.au",
+            ]
+        )
         # Coles uses various auth cookies — save all that look relevant
         auth_names = {"flybuys", "session", "auth", "token", "jwt"}
-        auth_cookies = [c for c in cookies if any(name in c["name"].lower() for name in auth_names)]
-        cookie_file = Path(__file__).parent.parent.parent / "config" / "auth-cookies.json"
+        auth_cookies = [
+            c for c in cookies if any(name in c["name"].lower() for name in auth_names)
+        ]
+        cookie_file = (
+            Path(__file__).parent.parent.parent / "config" / "auth-cookies.json"
+        )
         with open(cookie_file, "w") as f:
             json.dump(auth_cookies, f, indent=2)
 

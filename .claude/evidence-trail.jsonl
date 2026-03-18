@@ -19,3 +19,14 @@
 {"ts":"2026-03-18T13:19:04Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && ruff check src/ tests/ --select E,F,W --ignore E501 2>&1\n"}
 {"ts":"2026-03-18T13:19:27Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && pytest tests/ -m \"not integration\" -v 2>&1\n"}
 {"ts":"2026-03-18T13:20:00Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && pytest tests/ -m \"not integration\" -v 2>&1\n"}
+{"ts":"2026-03-18T13:20:02Z","tool":"Bash","tier":"execution","detail":"git add . 2>&1 && git status 2>&1\n"}
+{"ts":"2026-03-18T13:20:09Z","tool":"Bash","tier":"execution","detail":"git commit -m \"$(cat <<'EOF'\nPhase 2: Add parsers module and improve test coverage\n\nAdded parsers.py for robust response parsing with alternative field names.\nImproved test coverage to 14 tests (all p\n"}
+{"ts":"2026-03-18T13:22:28Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && python -m pytest tests/test_parser_edge_cases.py -v\n"}
+{"ts":"2026-03-18T13:22:32Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && python -m pytest tests/ -m \"not integration\" -v\n"}
+{"ts":"2026-03-18T13:22:38Z","tool":"Bash","tier":"execution","detail":"grep -n \"pytest\" tests/test_parser_edge_cases.py\n"}
+{"ts":"2026-03-18T13:22:40Z","tool":"Bash","tier":"execution","detail":"grep -E \"@pytest|pytest\\.\" tests/test_parser_edge_cases.py\n"}
+{"ts":"2026-03-18T13:22:44Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && ruff check src/ tests/\n"}
+{"ts":"2026-03-18T13:23:07Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && ruff format src/ tests/\n"}
+{"ts":"2026-03-18T13:23:18Z","tool":"Bash","tier":"execution","detail":"source .venv/bin/activate && python -m pytest tests/ -m \"not integration\" -v --tb=short\n"}
+{"ts":"2026-03-18T13:23:20Z","tool":"Bash","tier":"execution","detail":"chmod +x scripts/test_subscriptions.py\n"}
+{"ts":"2026-03-18T13:23:22Z","tool":"Bash","tier":"execution","detail":"git status\n"}

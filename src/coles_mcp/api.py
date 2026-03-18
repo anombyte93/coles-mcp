@@ -35,7 +35,9 @@ class ColesAPI:
         self._fulfillment_store_id = "0357"
         self._shopping_method = "delivery"
 
-    def set_store_context(self, store_id: str, shopping_method: str = "delivery") -> None:
+    def set_store_context(
+        self, store_id: str, shopping_method: str = "delivery"
+    ) -> None:
         """Set store context for API calls."""
         self._store_id = store_id
         self._fulfillment_store_id = store_id
@@ -45,7 +47,9 @@ class ColesAPI:
         """Make sure the page is on coles.com.au (needed for fetch context)."""
         url = self._page.url or ""
         if "coles.com.au" not in url:
-            await self._page.goto(f"{self.BASE}/", wait_until="domcontentloaded", timeout=30000)
+            await self._page.goto(
+                f"{self.BASE}/", wait_until="domcontentloaded", timeout=30000
+            )
 
     async def _discover_subscription_key(self) -> str | None:
         """Scrape subscription key from Coles homepage JS bundle.
@@ -67,7 +71,7 @@ class ColesAPI:
             key_pattern = r'subscription-key["\']?\s*:\s*["\']?([a-f0-9]{32})["\']?'
 
             for script_url in scripts[:20]:  # Check first 20 scripts only
-                if script_url and '.js' in script_url:
+                if script_url and ".js" in script_url:
                     try:
                         response = await self._page.evaluate(f"""async () => {{
                             try {{
@@ -166,7 +170,9 @@ class ColesAPI:
             full_path = f"{path}{separator}subscription-key={subscription_key}"
 
         base = self.API_BASE if use_api_base else self.BASE
-        body_js = f"body: JSON.stringify({json.dumps(body)})," if body is not None else ""
+        body_js = (
+            f"body: JSON.stringify({json.dumps(body)})," if body is not None else ""
+        )
         js = f"""
         async () => {{
             try {{
@@ -193,7 +199,9 @@ class ColesAPI:
         last_result = None
         for attempt in range(self.MAX_FETCH_RETRIES + 1):  # +1 for auth retry
             last_result = await self._page.evaluate(js)
-            error_code = last_result.get("error") if isinstance(last_result, dict) else None
+            error_code = (
+                last_result.get("error") if isinstance(last_result, dict) else None
+            )
 
             # Success or non-retryable/non-auth error — return immediately
             if error_code is None:
@@ -236,7 +244,7 @@ class ColesAPI:
             # Retryable error — exponential backoff (1s, 2s, 4s...)
             if error_code in self.RETRYABLE_CODES:
                 if attempt < self.MAX_FETCH_RETRIES:
-                    await _asyncio.sleep(2 ** attempt)
+                    await _asyncio.sleep(2**attempt)
                     continue
 
             # Non-retryable error
@@ -310,15 +318,23 @@ class ColesAPI:
     async def health_check(self) -> dict:
         """Three-layer health check: CDP → API → Auth. Returns structured status."""
         import time
+
         result = {}
 
         # Layer 1: CDP — can we reach the page at all?
         t0 = time.monotonic()
         try:
             await self._ensure_on_site()
-            result["cdp"] = {"status": "ok", "latency_ms": round((time.monotonic() - t0) * 1000)}
+            result["cdp"] = {
+                "status": "ok",
+                "latency_ms": round((time.monotonic() - t0) * 1000),
+            }
         except Exception as e:
-            result["cdp"] = {"status": "fail", "error": str(e), "latency_ms": round((time.monotonic() - t0) * 1000)}
+            result["cdp"] = {
+                "status": "fail",
+                "error": str(e),
+                "latency_ms": round((time.monotonic() - t0) * 1000),
+            }
             result["api"] = {"status": "unknown", "reason": "cdp_down"}
             result["auth"] = {"status": "unknown", "reason": "cdp_down"}
             return result
@@ -329,7 +345,11 @@ class ColesAPI:
         api_latency = round((time.monotonic() - t1) * 1000)
 
         if "error" in auth_data:
-            result["api"] = {"status": "fail", "error": auth_data.get("message", "unknown"), "latency_ms": api_latency}
+            result["api"] = {
+                "status": "fail",
+                "error": auth_data.get("message", "unknown"),
+                "latency_ms": api_latency,
+            }
             result["auth"] = {"status": "unknown", "reason": "api_down"}
             return result
 

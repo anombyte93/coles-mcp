@@ -22,13 +22,22 @@ def parse_search_response(data: dict[str, Any]) -> list[dict]:
         # Handle various field name variations
         product = Product(
             name=item.get("name") or item.get("productName") or "",
-            price=item.get("price") or item.get("salePrice") or item.get("listedPrice") or 0,
+            price=item.get("price")
+            or item.get("salePrice")
+            or item.get("listedPrice")
+            or 0,
             unit_price=item.get("unitPrice") or item.get("pricePerUnit"),
-            image_url=item.get("imageUrl") or item.get("image") or item.get("thumbnail"),
-            product_id=str(item.get("id") or item.get("productId") or item.get("stockcode") or ""),
+            image_url=item.get("imageUrl")
+            or item.get("image")
+            or item.get("thumbnail"),
+            product_id=str(
+                item.get("id") or item.get("productId") or item.get("stockcode") or ""
+            ),
             product_url=item.get("productUrl") or item.get("url") or "",
             in_stock=item.get("inStock") is not False,
-            was_price=item.get("wasPrice") or item.get("originalPrice") or item.get("listPrice"),
+            was_price=item.get("wasPrice")
+            or item.get("originalPrice")
+            or item.get("listPrice"),
         ).model_dump()
         products.append(product)
     return products
@@ -66,7 +75,9 @@ def parse_cart_response(data: dict[str, Any]) -> list[dict]:
     items = []
     for item in data.get("items", data.get("cartItems", [])):
         # Handle various field name variations
-        price = item.get("price") or item.get("salePrice") or item.get("listedPrice") or 0
+        price = (
+            item.get("price") or item.get("salePrice") or item.get("listedPrice") or 0
+        )
         quantity = item.get("quantity") or item.get("qty") or 0
         subtotal = item.get("subtotal") or item.get("totalPrice") or (price * quantity)
 
